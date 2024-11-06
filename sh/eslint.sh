@@ -46,7 +46,7 @@ import vercelStyleGuideNext from "@vercel/style-guide/eslint/next"
 export default [
   // Ignores configuration
   {
-    "ignore": [
+    ignores: [
       "node_modules",
       ".next",
       "out",
