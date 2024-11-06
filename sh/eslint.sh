@@ -234,7 +234,6 @@ export default [
           {
             semi: false,
             parser: "typescript",
-            useTabs: true,
             tabWidth: 2,
             proseWrap: "preserve",
             endOfLine: "lf",
