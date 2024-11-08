@@ -875,6 +875,9 @@ check_gitignore_exists() {
 
 create_gitignore() {
     echo '
+# Next
+.next
+
 # Node.js
 node_modules/
 npm-debug.log
