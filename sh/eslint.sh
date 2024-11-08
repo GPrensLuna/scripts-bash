@@ -44,499 +44,567 @@ import vercelStyleGuideReact from "@vercel/style-guide/eslint/rules/react"
 import vercelStyleGuideNext from "@vercel/style-guide/eslint/next"
 
 export default [
-	// Ignores configuration
-	{
-		ignores: ["node_modules", ".next", "out", "coverage", ".idea"],
-	},
-	// General configuration
-	{
-		rules: {
-			"padding-line-between-statements": [
-				"warn",
-				{ blankLine: "always", prev: "*", next: ["return", "export"] },
-				{
-					blankLine: "always",
-					prev: ["const", "let", "var"],
-					next: "*",
-				},
-				{
-					blankLine: "any",
-					prev: ["const", "let", "var"],
-					next: ["const", "let", "var"],
-				},
-			],
-			"no-console": "warn",
-			"no-alert": "warn", // Evita el uso de `alert`, `confirm`, etc.
-			"no-debugger": "warn", // Evita el uso de `debugger`
-			"no-unused-vars": "warn", // Asegura que no haya variables sin usar
-			"no-empty-function": "warn", // Previene funciones vacías
-			"prefer-const": "warn", // Asegura el uso de `const` cuando sea posible
-			"consistent-return": "warn", // Asegura que las funciones tengan un `return` consistente
-			eqeqeq: "warn", // Asegura el uso de `===` y `!==` en lugar de `==` y `!=`
-			// "max-lines": ["warn", 200], // Limita la cantidad de líneas en un archivo
-			// "max-params": ["warn", 4], // Limita la cantidad de parámetros de una función
-			// complexity: ["warn", 10], // Limita la complejidad ciclomática
-			//"no-magic-numbers": ["warn", { ignore: [0, 1] }], // Evita números mágicos
-		},
-	},
-	// React configuration
-	{
-		plugins: {
-			react: fixupPluginRules(eslintPluginReact),
-			"react-hooks": fixupPluginRules(eslintPluginReactHooks),
-			"react-compiler": fixupPluginRules(eslintPluginReactCompiler),
-			"jsx-a11y": fixupPluginRules(eslintPluginJsxA11y),
-		},
-		languageOptions: {
-			parserOptions: {
-				ecmaFeatures: {
-					jsx: true,
-				},
-			},
-			globals: {
-				...globals.browser,
-				...globals.serviceworker,
-			},
-		},
-		settings: {
-			react: {
-				version: "detect",
-			},
-		},
-		rules: {
-			...eslintPluginReact.configs.recommended.rules,
-			...eslintPluginJsxA11y.configs.recommended.rules,
-			...eslintPluginReactHooks.configs.recommended.rules,
-			...vercelStyleGuideReact.rules,
-			"react/prop-types": "off",
-			"react/jsx-uses-react": "off",
-			"react/react-in-jsx-scope": "off",
-			"react/self-closing-comp": "warn",
-			"react/jsx-sort-props": [
-				"warn",
-				{
-					callbacksLast: true,
-					shorthandFirst: true,
-					noSortAlphabetically: false,
-					reservedFirst: true,
-				},
-			],
-			"react/function-component-definition": [
-				"warn",
-				{
-					namedComponents: "arrow-function",
-					unnamedComponents: "arrow-function",
-				},
-			],
-			"react-compiler/react-compiler": "error",
-			"react/jsx-no-leaked-render": "off",
-			"jsx-a11y/no-static-element-interactions": "off",
-			"jsx-a11y/click-events-have-key-events": "off",
-			"jsx-a11y/anchor-is-valid": "warn", // Asegura que los enlaces sean válidos
-			"jsx-a11y/label-has-associated-control": "warn", // Asegura que las etiquetas `<label>` tengan controles asociados
-			"jsx-a11y/no-noninteractive-element-interactions": "warn", // Previene el uso de elementos no interactivos con interacciones
-			"jsx-a11y/no-redundant-roles": "warn", // Evita roles redundantes en los elementos
-			"jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
-			"jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
-			"jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
-		},
-	},
-	// TypeScript configuration
-	...[
-		...tseslint.configs.recommended,
-		{
-			rules: {
-				...vercelStyleGuideTypescript.rules,
-				"@typescript-eslint/no-non-null-assertion": "off", // Evita el uso de `!` en declaraciones de variables
-				"@typescript-eslint/no-shadow": "off", // Evita el uso de `var` en declaraciones de variables
-				"@typescript-eslint/explicit-function-return-type": "off", // Evita el uso de `any` en declaraciones de funciones
-				"@typescript-eslint/require-await": "off", // Evita el uso de promesas sin await en funciones
-				"@typescript-eslint/no-floating-promises": "off", // Evita el uso de promesas sin await en funciones
-				"@typescript-eslint/no-confusing-void-expression": "off", // Evita el uso de `void` en declaraciones de variables
-				"@typescript-eslint/no-unused-vars": [
-					"warn",
-					{
-						args: "after-used",
-						ignoreRestSiblings: false,
-						argsIgnorePattern: "^_.*?$",
-					},
-				],
-				"@typescript-eslint/explicit-module-boundary-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/no-explicit-any": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/no-inferrable-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/explicit-function-return-type": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/no-empty-interface": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/ban-ts-comment": "error", // Evita los comentarios de `@ts-ignore` sin justificación
-				"@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }], // Evita el uso de variables sin usar
-				"@typescript-eslint/consistent-type-definitions": ["error", "interface"], // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/member-ordering": "error", // Requerir declaraciones de tipos de retorno en las funciones
-				"@typescript-eslint/no-magic-numbers": ["error", { ignore: [0, 1] }], // Evita números mágicos
-				"@typescript-eslint/no-this-alias": "error", // Evita el uso de `this` en declaraciones de variables
-				"@typescript-eslint/adjacent-overload-signatures": "error", // Evita el uso de `=` en declaraciones de variables
-				"@typescript-eslint/class-literal-property-style": "error",
-				"@typescript-eslint/consistent-generic-constructors": "error",
-				"@typescript-eslint/consistent-indexed-object-style": "error",
-				"@typescript-eslint/consistent-type-assertions": "error",
-				"@typescript-eslint/consistent-type-imports": "error",
-				"@typescript-eslint/explicit-member-accessibility": "error",
-				"@typescript-eslint/method-signature-style": "error",
-				"@typescript-eslint/no-confusing-non-null-assertion": "error",
-				"@typescript-eslint/no-duplicate-enum-values": "error",
-				"@typescript-eslint/no-extra-non-null-assertion": "error",
-				"@typescript-eslint/no-for-in-array": "error",
-				"@typescript-eslint/no-import-type-side-effects": "error",
-				"@typescript-eslint/no-require-imports": "error",
-				"@typescript-eslint/no-unnecessary-type-assertion": "off",
-				"@typescript-eslint/no-non-null-assertion": "error",
-				"@typescript-eslint/unified-signatures": "off",
-			},
-		},
-	],
-	// Prettier configuration
-	...[
-		eslintPluginPrettier,
-		{
-			rules: {
-				"prettier/prettier": [
-					"warn",
-					{
-						semi: false,
-						parser: "typescript",
-						useTabs: true,
-						tabWidth: 2,
-						proseWrap: "preserve",
-						endOfLine: "lf",
-						printWidth: 100,
-						quoteProps: "as-needed",
-						rangeStart: 0,
-						singleQuote: true,
-						arrowParens: "always",
-						insertPragma: false,
-						trailingComma: "all",
-						requirePragma: false,
-						bracketSpacing: true,
-						jsxSingleQuote: false,
-						bracketSameLine: false,
-						jsxBracketSameLine: false,
-						singleAttributePerLine: false,
-						vueIndentScriptAndStyle: false,
-						htmlWhitespaceSensitivity: "css",
-						embeddedLanguageFormatting: "auto",
-						plugins: ["prettier-plugin-tailwindcss"],
-						overrides: [
-							{
-								files: "*.{ts,tsx}",
-								options: {
-									parser: "typescript",
-								},
-							},
-							{
-								files: "*.{js,jsx}",
-								options: {
-									parser: "babel",
-								},
-							},
-							{
-								files: "*.vue",
-								options: {
-									parser: "vue",
-								},
-							},
-							{
-								files: "*.css",
-								options: {
-									parser: "css",
-								},
-							},
-							{
-								files: "*.scss",
-								options: {
-									parser: "scss",
-								},
-							},
-							{
-								files: "*.less",
-								options: {
-									parser: "less",
-								},
-							},
-							{
-								files: "*.json",
-								options: {
-									parser: "json",
-								},
-							},
-							{
-								files: "*.md",
-								options: {
-									parser: "markdown",
-								},
-							},
-							{
-								files: "*.yaml",
-								options: {
-									parser: "yaml",
-								},
-							},
-						],
-						importOrder: ["^react", "^next", "<THIRD_PARTY_MODULES>", "^@/(.*)$", "^[./]"],
-						importOrderSeparation: true,
-						importOrderSortSpecifiers: true,
-						importOrderGroupNamespaceSpecifiers: true,
-						importOrderCaseInsensitive: true,
-						xmlWhitespaceSensitivity: "strict",
-						jsonRecursiveSort: true,
-						astroAllowShorthand: false,
-					},
-				],
-			},
-		},
-	],
-	// Import configuration
-	{
-		plugins: {
-			import: fixupPluginRules(eslintPluginImport),
-		},
-		rules: {
-			"import/no-default-export": "off", // Evita exportaciones por defecto
-			"import/first": "warn", // Asegura que las importaciones estén al principio del archivo
-			"import/no-duplicates": "warn", // Evita importaciones duplicadas
+  // Ignores configuration
+  {
+    ignores: [
+      "node_modules",
+      ".next",
+      "out",
+      "coverage",
+      ".idea",
+      "dist",
+      "build",
+      "*.log",
+      "*.tmp",
+      "*.json",
+      "package-lock.json",
+      "yarn.lock",
+      "pnpm-lock.yaml",
+      "tsconfig.json",
+      "tsconfig.build.json",
+      "webpack.config.js",
+      "prettier.config.js",
+      ".env",
+      ".env.local",
+      ".env.*.local",
+      "db.sqlite",
+      "*.sql",
+      "*.db",
+      "*.map",
+      ".vscode",
+      "tests",
+      "test",
+      "__tests__",
+      "docs",
+      "examples",
+      "src/**/*.test.ts",
+      "src/**/*.test.js",
+      "src/**/*.spec.ts",
+      "src/**/*.spec.js",
+      "*.bak",
+      "*.swp",
+      "*.swo"
+    ]
 
-			"import/order": [
-				"warn",
-				{
-					groups: [
-						"type",
-						"builtin",
-						"object",
-						"external",
-						"internal",
-						"parent",
-						"sibling",
-						"index",
-					],
-					pathGroups: [
-						{
-							pattern: "~/**",
-							group: "external",
-							position: "after",
-						},
-					],
-					"newlines-between": "always", // Determina si se usará una nueva línea entre importaciones
-				},
-			],
-		},
-	},
-	// Next configuration
-	{
-		plugins: {
-			next: fixupPluginRules(eslintPluginNext),
-		},
-		languageOptions: {
-			globals: {
-				...globals.node,
-				...globals.browser,
-			},
-		},
-		rules: {
-			...vercelStyleGuideNext.rules,
-			"next/no-img-element": "warn", // Evita el uso de `<img />` sin `next/image`
-		},
-	},
+  },
+  // General configuration
+  {
+    rules: {
+      "padding-line-between-statements": [
+        "warn",
+        { blankLine: "always", prev: "*", next: ["return", "export"] },
+        {
+          blankLine: "always",
+          prev: ["const", "let", "var"],
+          next: "*",
+        },
+        {
+          blankLine: "any",
+          prev: ["const", "let", "var"],
+          next: ["const", "let", "var"],
+        },
+      ],
+      "no-console": "warn",
+      "no-alert": "warn", // Evita el uso de `alert`, `confirm`, etc.
+      "no-debugger": "warn", // Evita el uso de `debugger`
+      "no-unused-vars": "warn", // Asegura que no haya variables sin usar
+      "no-empty-function": "warn", // Previene funciones vacías
+      "prefer-const": "warn", // Asegura el uso de `const` cuando sea posible
+      "consistent-return": "warn", // Asegura que las funciones tengan un `return` consistente
+      eqeqeq: "warn", // Asegura el uso de `===` y `!==` en lugar de `==` y `!=`
+      // "max-lines": ["warn", 200], // Limita la cantidad de líneas en un archivo
+      // "max-params": ["warn", 4], // Limita la cantidad de parámetros de una función
+      // complexity: ["warn", 10], // Limita la complejidad ciclomática
+      //"no-magic-numbers": ["warn", { ignore: [0, 1] }], // Evita números mágicos
+    },
+  },
+  // React configuration
+  {
+    plugins: {
+      react: fixupPluginRules(eslintPluginReact),
+      "react-hooks": fixupPluginRules(eslintPluginReactHooks),
+      "react-compiler": fixupPluginRules(eslintPluginReactCompiler),
+      "jsx-a11y": fixupPluginRules(eslintPluginJsxA11y),
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.serviceworker,
+      },
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      ...eslintPluginReact.configs.recommended.rules,
+      ...eslintPluginJsxA11y.configs.recommended.rules,
+      ...eslintPluginReactHooks.configs.recommended.rules,
+      ...vercelStyleGuideReact.rules,
+      "react/prop-types": "off",
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/self-closing-comp": "warn",
+      "react/jsx-sort-props": [
+        "warn",
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          noSortAlphabetically: false,
+          reservedFirst: true,
+        },
+      ],
+      "react-compiler/react-compiler": "error",
+      "react/jsx-no-leaked-render": "off",
+      "jsx-a11y/no-static-element-interactions": "off",
+      "jsx-a11y/click-events-have-key-events": "off",
+      "jsx-a11y/anchor-is-valid": "warn", // Asegura que los enlaces sean válidos
+      "jsx-a11y/label-has-associated-control": "warn", // Asegura que las etiquetas `<label>` tengan controles asociados
+      "jsx-a11y/no-noninteractive-element-interactions": "warn", // Previene el uso de elementos no interactivos con interacciones
+      "jsx-a11y/no-redundant-roles": "warn", // Evita roles redundantes en los elementos
+      "jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
+      "jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
+      "jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
+    },
+  },
+  // TypeScript configuration
+  ...[
+    ...tseslint.configs.recommended,
+    {
+      rules: {
+        ...vercelStyleGuideTypescript.rules,
+        "@typescript-eslint/no-non-null-assertion": "off", // Evita el uso de `!` en declaraciones de variables
+        "@typescript-eslint/no-shadow": "off", // Evita el uso de `var` en declaraciones de variables
+        "@typescript-eslint/explicit-function-return-type": "off", // Evita el uso de `any` en declaraciones de funciones
+        "@typescript-eslint/require-await": "off", // Evita el uso de promesas sin await en funciones
+        "@typescript-eslint/no-floating-promises": "off", // Evita el uso de promesas sin await en funciones
+        "@typescript-eslint/no-confusing-void-expression": "off", // Evita el uso de `void` en declaraciones de variables
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            args: "after-used",
+            ignoreRestSiblings: false,
+            argsIgnorePattern: "^_.*?$",
+          },
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/no-explicit-any": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/no-inferrable-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/explicit-function-return-type": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/no-empty-interface": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/ban-ts-comment": "error", // Evita los comentarios de `@ts-ignore` sin justificación
+        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }], // Evita el uso de variables sin usar
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"], // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/member-ordering": "error", // Requerir declaraciones de tipos de retorno en las funciones
+        "@typescript-eslint/no-magic-numbers": ["error", { ignore: [0, 1] }], // Evita números mágicos
+        "@typescript-eslint/no-this-alias": "error", // Evita el uso de `this` en declaraciones de variables
+        "@typescript-eslint/adjacent-overload-signatures": "error", // Evita el uso de `=` en declaraciones de variables
+        "@typescript-eslint/class-literal-property-style": "error",
+        "@typescript-eslint/consistent-generic-constructors": "error",
+        "@typescript-eslint/consistent-indexed-object-style": "error",
+        "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/explicit-member-accessibility": "error",
+        "@typescript-eslint/method-signature-style": "error",
+        "@typescript-eslint/no-confusing-non-null-assertion": "error",
+        "@typescript-eslint/no-duplicate-enum-values": "error",
+        "@typescript-eslint/no-extra-non-null-assertion": "error",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "@typescript-eslint/no-require-imports": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/unified-signatures": "off",
+      },
+    },
+  ],
+  // Prettier configuration
+  ...[
+    eslintPluginPrettier,
+    {
+      rules: {
+        "prettier/prettier": [
+          "warn",
+          {
+            semi: false,
+            parser: "typescript",
+            tabWidth: 2,
+            proseWrap: "preserve",
+            endOfLine: "lf",
+            printWidth: 100,
+            quoteProps: "as-needed",
+            rangeStart: 0,
+            singleQuote: true,
+            arrowParens: "always",
+            insertPragma: false,
+            trailingComma: "all",
+            requirePragma: false,
+            bracketSpacing: true,
+            jsxSingleQuote: false,
+            bracketSameLine: false,
+            jsxBracketSameLine: false,
+            singleAttributePerLine: false,
+            vueIndentScriptAndStyle: false,
+            htmlWhitespaceSensitivity: "css",
+            embeddedLanguageFormatting: "auto",
+            plugins: ["prettier-plugin-tailwindcss"],
+            overrides: [
+              {
+                files: "*.{ts,tsx}",
+                options: {
+                  parser: "typescript",
+                },
+              },
+              {
+                files: "*.{js,jsx}",
+                options: {
+                  parser: "babel",
+                },
+              },
+              {
+                files: "*.vue",
+                options: {
+                  parser: "vue",
+                },
+              },
+              {
+                files: "*.css",
+                options: {
+                  parser: "css",
+                },
+              },
+              {
+                files: "*.scss",
+                options: {
+                  parser: "scss",
+                },
+              },
+              {
+                files: "*.less",
+                options: {
+                  parser: "less",
+                },
+              },
+              {
+                files: "*.json",
+                options: {
+                  parser: "json",
+                },
+              },
+              {
+                files: "*.md",
+                options: {
+                  parser: "markdown",
+                },
+              },
+              {
+                files: "*.yaml",
+                options: {
+                  parser: "yaml",
+                },
+              },
+            ],
+            importOrder: ["^react", "^next", "<THIRD_PARTY_MODULES>", "^@/(.*)$", "^[./]"],
+            importOrderSeparation: true,
+            importOrderSortSpecifiers: true,
+            importOrderGroupNamespaceSpecifiers: true,
+            importOrderCaseInsensitive: true,
+            xmlWhitespaceSensitivity: "strict",
+            jsonRecursiveSort: true,
+            astroAllowShorthand: false,
+          },
+        ],
+      },
+    },
+  ],
+  // Import configuration
+  {
+    plugins: {
+      import: fixupPluginRules(eslintPluginImport),
+    },
+    rules: {
+      "import/no-default-export": "off", // Evita exportaciones por defecto
+      "import/first": "warn", // Asegura que las importaciones estén al principio del archivo
+      "import/no-duplicates": "warn", // Evita importaciones duplicadas
+
+      "import/order": [
+        "warn",
+        {
+          groups: [
+            "type",
+            "builtin",
+            "object",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          pathGroups: [
+            {
+              pattern: "~/**",
+              group: "external",
+              position: "after",
+            },
+          ],
+          "newlines-between": "always", // Determina si se usará una nueva línea entre importaciones
+        },
+      ],
+    },
+  },
+  // Next configuration
+  {
+    plugins: {
+      next: fixupPluginRules(eslintPluginNext),
+    },
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+    rules: {
+      ...vercelStyleGuideNext.rules,
+      "next/no-img-element": "warn", // Evita el uso de `<img />` sin `next/image`
+    },
+  },
 ]
-
-
 '
 }
+
+
 
 # ------------------------------------------------------------------------------
 #* 4. Función para generar la configuración de eslint para Nest.js
 generate_nest_eslint() {
-    echo '
-module.exports = {
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: "tsconfig.json",
-    tsconfigRootDir: __dirname,
-    sourceType: "module",
+    echo 'import { fixupPluginRules } from "@eslint/compat"
+import tseslint from "typescript-eslint"
+import globals from "globals"
+import nestjsPlugin from "eslint-plugin-nestjs"
+import eslintPluginImport from "eslint-plugin-import"
+import eslintPluginPrettier from "eslint-plugin-prettier/recommended"
+import eslintPluginNode from "eslint-plugin-node"
+import eslintPluginSecurity from "eslint-plugin-security"
+
+export default [
+  // Ignores configuration
+  {
+    ignores: [
+      "node_modules",
+      ".next",
+      "out",
+      "coverage",
+      ".idea",
+      "dist",
+      "build",
+      "*.log",
+      "*.tmp",
+      "*.json",
+      "package-lock.json",
+      "yarn.lock",
+      "pnpm-lock.yaml",
+      "tsconfig.json",
+      "tsconfig.build.json",
+      "webpack.config.js",
+      "prettier.config.js",
+      ".env",
+      ".env.local",
+      ".env.*.local",
+      "db.sqlite",
+      "*.sql",
+      "*.db",
+      "*.map",
+      ".vscode",
+      "tests",
+      "test",
+      "__tests__",
+      "docs",
+      "examples",
+      "src/**/*.test.ts",
+      "src/**/*.test.js",
+      "src/**/*.spec.ts",
+      "src/**/*.spec.js",
+      "*.bak",
+      "*.swp",
+      "*.swo",
+    ],
   },
-  plugins: [
-    "@typescript-eslint/eslint-plugin",
-    "node",
-    "security",
-    "nestjs",
-    "prettier",
-  ],
-  extends: [
-    "prettier",
-    "eslint:recommended",
-    "plugin:nestjs/recommended",
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-  ],
-  root: true,
-  env: {
-    node: true,
-    es2021: true,
-    jest: true,
+  // General configuration
+  {
+    rules: {
+      "padding-line-between-statements": [
+        "warn",
+        { blankLine: "always", prev: "*", next: ["return", "export"] },
+        {
+          blankLine: "always",
+          prev: ["const", "let", "var"],
+          next: "*",
+        },
+        {
+          blankLine: "any",
+          prev: ["const", "let", "var"],
+          next: ["const", "let", "var"],
+        },
+      ],
+      "no-console": "warn",
+      "no-alert": "warn",
+      "no-debugger": "warn",
+      "no-unused-vars": "warn",
+      "no-empty-function": "warn",
+      "prefer-const": "warn",
+      "consistent-return": "warn",
+      eqeqeq: "warn",
+    },
   },
-  ignorePatterns: [".eslintrc.js", "global.d.ts", "prettier.config.js"],
-  rules: {
-    "prettier/prettier": [
-      "error",
-      {
-        experimentalTernaries: true,
-        printWidth: 80,
-        tabWidth: 2,
-        useTabs: false,
-        semi: false,
-        singleQuote: true,
-        quoteProps: "as-needed",
-        jsxSingleQuote: false,
-        trailingComma: "all",
-        bracketSpacing: true,
-        bracketSameLine: true,
-        arrowParens: "always",
-        parser: "typescript",
-        requirePragma: false,
-        insertPragma: false,
-        proseWrap: "always",
-        htmlWhitespaceSensitivity: "css",
-        vueIndentScriptAndStyle: false,
-        endOfLine: "lf",
-        embeddedLanguageFormatting: "auto",
-        singleAttributePerLine: false,
-        requireConfig: true,
-        fileInfoOptions: {
-          withNodeModules: true,
-          module: true,
+  // TypeScript configuration
+  ...[
+    ...tseslint.configs.recommended,
+    ...tseslint.configs.strict,
+    {
+      rules: {
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-inferrable-types": "error",
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/ban-ts-comment": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { argsIgnorePattern: "^_" },
+        ],
+        "@typescript-eslint/consistent-type-definitions": [
+          "error",
+          "interface",
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": "error",
+        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/no-magic-numbers": "error",
+        "@typescript-eslint/no-this-alias": "error",
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        "@typescript-eslint/class-literal-property-style": "error",
+        "@typescript-eslint/consistent-generic-constructors": "error",
+        "@typescript-eslint/consistent-indexed-object-style": "error",
+        "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/explicit-member-accessibility": "error",
+        "@typescript-eslint/method-signature-style": "error",
+        "@typescript-eslint/no-confusing-non-null-assertion": "error",
+        "@typescript-eslint/no-duplicate-enum-values": "error",
+        "@typescript-eslint/no-extra-non-null-assertion": "error",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "@typescript-eslint/no-require-imports": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/ban-tslint-comment": "error",
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/no-misused-promises": "off",
+        eqeqeq: ["error", "always"],
+        "no-console": "error",
+        "@typescript-eslint/unified-signatures": "off",
+      },
+    },
+  ],
+  // Prettier configuration
+  ...[
+    eslintPluginPrettier,
+    {
+      rules: {
+        "prettier/prettier": [
+          "warn",
+          {
+            experimentalTernaries: true,
+            printWidth: 80,
+            tabWidth: 2,
+            useTabs: false,
+            semi: false,
+            singleQuote: true,
+            quoteProps: "as-needed",
+            trailingComma: "all",
+            bracketSpacing: true,
+            bracketSameLine: true,
+            arrowParens: "always",
+            parser: "typescript",
+            requirePragma: false,
+            insertPragma: false,
+            proseWrap: "always",
+            htmlWhitespaceSensitivity: "css",
+            vueIndentScriptAndStyle: false,
+            endOfLine: "lf",
+            embeddedLanguageFormatting: "auto",
+            singleAttributePerLine: false,
+            requireConfig: true,
+            fileInfoOptions: {
+              withNodeModules: true,
+              module: true,
+            },
+          },
+        ],
+      },
+    },
+  ],
+  // Import configuration
+  {
+    plugins: {
+      import: fixupPluginRules(eslintPluginImport),
+    },
+    rules: {
+      "import/no-default-export": "off",
+      "import/first": "warn",
+    },
+  },
+  // NestJS configuration
+  {
+    plugins: {
+      nestjs: nestjsPlugin,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+    rules: {},
+  },
+  // Node configuration
+  {
+    plugins: {
+      node: eslintPluginNode,
+    },
+    rules: {
+      "node/no-unsupported-features/es-syntax": "off",
+      "node/no-extraneous-import": "warn",
+    },
+  },
+  // Security configuration
+  {
+    plugins: {
+      security: eslintPluginSecurity,
+    },
+    rules: {
+      "security/detect-object-injection": "warn",
+      "security/detect-non-literal-fs-filename": "warn",
+    },
+  },
+  // TypeScript paths configuration
+  {
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+          alwaysTryTypes: true,
+          extensions: [".ts", ".tsx", ".d.ts"],
         },
       },
-    ],
-
-    "no-console": "error",
-    "no-debugger": "error",
-    eqeqeq: "error",
-    "no-unused-vars": "error",
-    "no-duplicate-imports": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-inferrable-types": "error",
-    "@typescript-eslint/explicit-function-return-type": "error",
-    "@typescript-eslint/no-empty-interface": "error",
-    "@typescript-eslint/ban-ts-comment": "error",
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    "@typescript-eslint/strict-boolean-expressions": "error",
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-    "@typescript-eslint/member-ordering": "error",
-    "@typescript-eslint/no-magic-numbers": "error",
-    "@typescript-eslint/no-this-alias": "error",
-    "@typescript-eslint/no-unsafe-assignment": "error",
-    "@typescript-eslint/adjacent-overload-signatures": "error",
-    "@typescript-eslint/await-thenable": "error",
-    "@typescript-eslint/class-literal-property-style": "error",
-    "@typescript-eslint/consistent-generic-constructors": "error",
-    "@typescript-eslint/consistent-indexed-object-style": "error",
-    "@typescript-eslint/consistent-type-assertions": "error",
-    "@typescript-eslint/consistent-type-exports": "error",
-    "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/explicit-member-accessibility": "error",
-    "@typescript-eslint/method-signature-style": "error",
-    "@typescript-eslint/no-confusing-non-null-assertion": "error",
-    "@typescript-eslint/no-duplicate-enum-values": "error",
-    "@typescript-eslint/no-duplicate-type-constituents": "error",
-    "@typescript-eslint/no-extra-non-null-assertion": "error",
-    "@typescript-eslint/no-for-in-array": "error",
-    "@typescript-eslint/no-import-type-side-effects": "error",
-    "@typescript-eslint/no-require-imports": "error",
-    "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
-    "@typescript-eslint/no-unnecessary-condition": "error",
-    "@typescript-eslint/no-unnecessary-type-assertion": "off",
-    "@typescript-eslint/no-unsafe-call": "error",
-    "@typescript-eslint/no-unsafe-member-access": "error",
-    "@typescript-eslint/no-non-null-assertion": "error",
-    "@typescript-eslint/prefer-reduce-type-parameter": "error",
-    "@typescript-eslint/prefer-string-starts-ends-with": "error",
-    "@typescript-eslint/restrict-template-expressions": "error",
-    "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/return-await": "error",
-    "@typescript-eslint/unified-signatures": "off",
-    "@typescript-eslint/naming-convention": [
-      "error",
-      {
-        selector: "default",
-        format: ["camelCase"],
-      },
-      {
-        selector: "variable",
-        format: ["camelCase", "UPPER_CASE", "PascalCase"],
-        leadingUnderscore: "allow",
-      },
-      {
-        selector: "parameter",
-        format: ["camelCase"],
-        leadingUnderscore: "allow",
-      },
-      {
-        selector: "memberLike",
-        modifiers: ["private"],
-        format: ["camelCase", "UPPER_CASE", "snake_case"],
-        leadingUnderscore: "allow",
-      },
-      {
-        selector: "memberLike",
-        modifiers: ["public"],
-        format: ["camelCase", "UPPER_CASE", "snake_case", "PascalCase"],
-      },
-      {
-        selector: "typeLike",
-        format: ["PascalCase"],
-      },
-      {
-        selector: "enumMember",
-        format: ["UPPER_CASE"],
-      },
-      {
-        selector: "objectLiteralMethod",
-        format: ["camelCase", "PascalCase"],
-      },
-      {
-        selector: "objectLiteralProperty",
-        format: ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
-      },
-    ],
-    quotes: ["error", "single"],
-    "brace-style": ["error", "1tbs"],
-    curly: ["error", "all"],
-    indent: ["error", 2],
-    "max-len": ["error", { code: 120 }],
-    "no-implicit-coercion": "error",
-    "node/no-missing-require": "error",
-    "node/no-unpublished-require": "error",
-    "node/exports-style": ["error", "module.exports"],
-    "node/no-deprecated-api": "warn",
-    "security/detect-non-literal-fs-filename": "warn",
-    "security/detect-eval-with-expression": "error",
-    "security/detect-new-buffer": "error",
-  },
-  overrides: [
-    {
-      files: ["*.ts", "*.tsx"],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: __dirname,
-      },
-    },
-  ],
-  settings: {
-    react: {
-      version: "detect",
     },
   },
-}
-
+]
 '
 }
 
@@ -555,82 +623,6 @@ ask_for_package_manager() {
 
 
 # ------------------------------------------------------------------------------
-#* 7. Función para crear o reemplazar un archivo .eslintignore
-check_eslintignore_exists() {
-
-       # Comprobar si ya existe un archivo .eslintignore
-    if [ -f ".eslintignore" ]; then
-        read -p ".eslintignore ya existe. ¿Deseas reemplazarlo? (s/n): " respuesta
-        if [[ "$respuesta" != "s" ]]; then
-            echo "No se reemplazará .eslintignore."
-            return 1  # No reemplazar
-        fi
-    fi
-}
-create_eslintignore() {
-    echo '
-# Ignorar dependencias de terceros
-node_modules/
-
-# Ignorar directorios de salida y compilación
-dist/
-build/
-
-# Ignorar directorios de pruebas
-coverage/
-
-# Ignorar archivos temporales y logs
-*.log
-*.tmp
-
-# Ignorar configuraciones y archivos de integración o herramientas de construcción
-*.json
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-tsconfig.json
-tsconfig.build.json
-webpack.config.js
-prettier.config.js
-
-# Ignorar directorios específicos de entorno de desarrollo
-.env
-.env.local
-.env.*.local
-
-# Ignorar archivos de la base de datos temporal o de caché
-db.sqlite
-*.sql
-*.db
-
-# Ignorar archivos generados automáticamente
-*.map
-
-# Ignorar archivos específicos de IDEs y editores
-.vscode/
-.idea/
-
-# Ignorar carpetas de pruebas unitarias o de integración
-tests/
-test/
-__tests__/
-
-# Ignorar directorios específicos de documentación y ejemplos
-docs/
-examples/
-
-# Ignorar archivos y directorios específicos de una estructura particular
-src/**/*.test.ts
-src/**/*.test.js
-src/**/*.spec.ts
-src/**/*.spec.js
-
-# Otros archivos a excluir de linting
-*.bak
-*.swp
-*.swo
-'
-}
 #* 8. Función para crear o reemplazar un archivo tyscript.jsom
 check_tsconfig_exists() {
 
@@ -852,137 +844,6 @@ check_prettier_exists() {
   done
 }
 
-create_nest_prettier() {
-    echo 'module.exports = {
-  experimentalTernaries: true, // Habilita la experimentación con ternarios más complejos
-  printWidth: 80, // Ancho máximo de línea antes de que Prettier haga un salto de línea
-  tabWidth: 2, // Número de espacios por tabulación
-  useTabs: false, // Usa espacios en lugar de tabuladores
-  semi: false, // No agregar punto y coma al final de las declaraciones
-  singleQuote: true, // Usa comillas simples en lugar de comillas dobles
-  quoteProps: as-needed, // Solo agregar comillas a las propiedades de los objetos cuando sea necesario
-  jsxSingleQuote: false, // No usar comillas simples para JSX, usar comillas dobles
-  trailingComma: all, // Agregar coma al final de los elementos (si hay varios) en arrays y objetos
-  bracketSpacing: true, // Espacio entre los corchetes de objetos (ej: { key: value })
-  bracketSameLine: true, // Los corchetes de los objetos no deben ir en la misma línea que la última propiedad
-  arrowParens: always, // Siempre rodear los parámetros de las funciones con paréntesis
-  parser: typescript, // El analizador que se utiliza para analizar el código. "babel" es una opción común para JavaScript y TypeScript.
-  requirePragma: false, // No se requiere pragma (comentario de preprocesador como /* @jsx */)
-  insertPragma: false, // No insertar automáticamente un pragma (comentario de preprocesador)
-  proseWrap: always, // Ajuste de texto en archivos de formato largo, siempre que el texto se ajuste
-  htmlWhitespaceSensitivity: css, // Sensibilidad al espacio en blanco dentro de archivos HTML (opciones: "css", "strict", "ignore")
-  vueIndentScriptAndStyle: false, // No identar el código dentro de los `<script>` y `<style>` de archivos Vue
-  endOfLine: lf, // Usar el salto de línea `LF` (de línea de texto) al final del archivo
-  embeddedLanguageFormatting: auto, // Formatear el código incrustado (por ejemplo, código en HTML o Markdown)
-  singleAttributePerLine: false, // No colocar un atributo de un solo valor en una línea separada (solo para HTML o JSX)
-  requireConfig: true, // Requiere que haya una configuración de Prettier antes de formatear archivos
-  fileInfoOptions: {
-    // Opciones para el análisis de información de archivos
-    withNodeModules: true, // Incluir módulos de node_modules en el análisis
-    module: true, // Permite que el módulo de Prettier se incluya en la configuración
-  },
-}'
-}
-#! 10. Función para crear o reemplazar un archivo tyscript.jsom
-create_next_prettier() {
-    echo '{
-  "semi": false,
-  "parser": "typescript",
-  "useTabs": true,
-  "tabWidth": 2,
-  "proseWrap": "preserve",
-  "endOfLine": "lf",
-  "printWidth": 100,
-  "quoteProps": "as-needed",
-  "rangeStart": 0,
-  "singleQuote": true,
-  "arrowParens": "always",
-  "insertPragma": false,
-  "trailingComma": "all",
-  "requirePragma": false,
-  "bracketSpacing": true,
-  "jsxSingleQuote": false,
-  "bracketSameLine": false,
-  "jsxBracketSameLine": false,
-  "singleAttributePerLine": false,
-  "vueIndentScriptAndStyle": false,
-  "htmlWhitespaceSensitivity": "css",
-  "embeddedLanguageFormatting": "auto",
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ],
-  "overrides": [
-    {
-      "files": "*.{ts,tsx}",
-      "options": {
-        "parser": "typescript"
-      }
-    },
-    {
-      "files": "*.{js,jsx}",
-      "options": {
-        "parser": "babel"
-      }
-    },
-    {
-      "files": "*.vue",
-      "options": {
-        "parser": "vue"
-      }
-    },
-    {
-      "files": "*.css",
-      "options": {
-        "parser": "css"
-      }
-    },
-    {
-      "files": "*.scss",
-      "options": {
-        "parser": "scss"
-      }
-    },
-    {
-      "files": "*.less",
-      "options": {
-        "parser": "less"
-      }
-    },
-    {
-      "files": "*.json",
-      "options": {
-        "parser": "json"
-      }
-    },
-    {
-      "files": "*.md",
-      "options": {
-        "parser": "markdown"
-      }
-    },
-    {
-      "files": "*.yaml",
-      "options": {
-        "parser": "yaml"
-      }
-    }
-  ],
-  "importOrder": [
-    "^react",
-    "^next",
-    "<THIRD_PARTY_MODULES>",
-    "^@/(.*)$",
-    "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "importOrderGroupNamespaceSpecifiers": true,
-  "importOrderCaseInsensitive": true,
-  "xmlWhitespaceSensitivity": "strict",
-  "jsonRecursiveSort": true,
-  "astroAllowShorthand": false
-}'
-}
 
 check_prettierignore_exists() {
 
@@ -996,70 +857,6 @@ check_prettierignore_exists() {
     fi
 }
 
-create_prettierignore() {
-    echo '
-# Ignorar dependencias de terceros
-node_modules/
-
-# Ignorar directorios de salida y compilación
-dist/
-build/
-
-# Ignorar directorios de pruebas
-coverage/
-
-# Ignorar archivos temporales y logs
-*.log
-*.tmp
-
-# Ignorar configuraciones y archivos de integración o herramientas de construcción
-*.json
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-tsconfig.json
-tsconfig.build.json
-webpack.config.js
-prettier.config.js
-
-# Ignorar directorios específicos de entorno de desarrollo
-.env
-.env.local
-.env.*.local
-
-# Ignorar archivos de la base de datos temporal o de caché
-db.sqlite
-*.sql
-*.db
-
-# Ignorar archivos generados automáticamente
-*.map
-
-# Ignorar archivos específicos de IDEs y editores
-.vscode/
-.idea/
-
-# Ignorar carpetas de pruebas unitarias o de integración
-tests/
-test/
-__tests__/
-
-# Ignorar directorios específicos de documentación y ejemplos
-docs/
-examples/
-
-# Ignorar archivos y directorios específicos de una estructura particular
-src/**/*.test.ts
-src/**/*.test.js
-src/**/*.spec.ts
-src/**/*.spec.js
-
-# Otros archivos a excluir de linting
-*.bak
-*.swp
-*.swo
-'
-}
 
 #! 11. Función para crear o reemplazar un archivo .gitignore
 
@@ -1258,9 +1055,9 @@ install_required_packages() {
     pnpm)
         echo "Instalando dependencias con pnpm..."
         if [[ "$framework" == "nest" ]]; then
-           pnpm i -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-prettier eslint-plugin-nestjs eslint-plugin-node eslint-plugin-prettier eslint-plugin-security prettier prettier-eslint typescript
+           pnpm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-prettier eslint-plugin-import eslint-plugin-nestjs eslint-plugin-node eslint-plugin-prettier eslint-plugin-security globals prettier-eslint prettier typescript-eslint typescript husky lint-staged
         elif [[ "$framework" == "next" ]]; then
-             pnpm i -D  @eslint/compat @next/eslint-plugin-next babel-plugin-react-compiler eslint eslint-config-next eslint-config-prettier eslint-plugin-import eslint-plugin-jsx  eslint-plugin-prettier eslint-plugin-react-compiler globals prettier prettier-plugin-tailwindcss typescript typescript-eslint @vercel/style-guide
+             pnpm i -D  @eslint/compat @next/eslint-plugin-next babel-plugin-react-compiler eslint eslint-config-next eslint-config-prettier eslint-plugin-import eslint-plugin-jsx  eslint-plugin-prettier eslint-plugin-react-compiler globals prettier prettier-plugin-tailwindcss typescript typescript-eslint @vercel/style-guide husky lint-staged
         fi
         ;;
     *)
@@ -1268,46 +1065,54 @@ install_required_packages() {
         ;;
 esac
 }
+
+generate_husky() {
+    echo '
+    #!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
+
+# "prepare": "husky install" package.json
+'
+}
+generate_lintstagedrc() {
+    echo '
+{
+  "**/{src,test}/**/*.{ts,tsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "**/*.{ts,tsx}": "bash -c tsc -p tsconfig.json --noEmit"
+}
+
+'
+}
+
 # ------------------------------------------------------------------------------
-#* 12. Función principal que organiza el flujo del script
+# Función principal que organiza el flujo del script
 main() {
     # Verificar si .eslintrc.js existe y preguntar si se desea reemplazar
     check_eslint_exists || return  # Si no se desea reemplazar, detener la ejecución
     check_tsconfig_exists || return  # Si no se desea reemplazar, detener la ejecución
     check_prettier_exists || return
-    check_eslintignore_exists || return
     check_gitignore_exists || return
     check_editorconfig_exists || return
 
     # Pedir el tipo de proyecto
     project_type=$(ask_project_type)
+    husky=$(generate_husky)
+    lintstagedrc=$(generate_lintstagedrc)
 
     # Generar la configuración de eslint según el tipo de proyecto
     case "$project_type" in
         next)
             eslintrc=$(generate_next_eslint)
-            prettier=$(create_next_prettier)
             tsconfig=$(generate_next_tsconfig)
-               # Crear el archivo .eslintrc.js
-    echo "$eslintrc" > eslint.config.mjs
-    echo "eslint.config.mjs creado/reemplazado exitosamente."
             ;;
         nest)
             eslintrc=$(generate_nest_eslint)
-            prettier=$(create_nest_prettier)
             tsconfig=$(generate_nest_tsconfig)
-    # Crear el archivo .eslintrc.js
-    echo "$eslintrc" > .eslintrc.js
-    echo ".eslintrc.js creado/reemplazado exitosamente."
-        # Crear el archivo .eslintignore
-    create_eslintignore > .eslintignore
-    echo ".eslintignore creado/reemplazado exitosamente."
-    # Crear el archivo .prettierignore
-    create_prettierignore > .prettierignore
-    echo ".prettierignore creado/reemplazado exitosamente."
-      # Crear el archivo prettier.config.js
-    echo "$prettier" > prettier.config.js
-    echo "prettier.config.js creado/reemplazado exitosamente."
             ;;
         *)
             echo "Tipo de proyecto no válido. Debes ingresar 'next' o 'nest'."
@@ -1315,10 +1120,22 @@ main() {
             ;;
     esac
 
+    # Crear el archivo .lintstagedrc
+    echo "$lintstagedrc" > .lintstagedrc
+    echo ".lintstagedrc creado/reemplazado exitosamente."
+
+    # Crear el archivo .eslintrc.js o eslint.config.mjs según se desee
+    echo "$eslintrc" > .eslintrc.js  # Asegúrate de que sea .eslintrc.js si ese es tu objetivo
+    echo ".eslintrc.js creado/reemplazado exitosamente."
+
     # Crear el archivo tsconfig.json
     echo "$tsconfig" > tsconfig.json
     echo "tsconfig.json creado/reemplazado exitosamente."
 
+    # Crear la carpeta /.husky y el archivo pre-commit dentro de ella
+    mkdir -p .husky
+    echo "$husky" > .husky/pre-commit
+    echo "Archivo .husky/pre-commit creado/reemplazado exitosamente."
 
     # Crear el archivo .gitignore
     create_gitignore > .gitignore
@@ -1328,10 +1145,8 @@ main() {
     create_editorconfig > .editorconfig
     echo ".editorconfig creado/reemplazado exitosamente."
 
-
     # Instalar paquetes requeridos
     install_required_packages
-
 }
 
 # Llamada a la función principal para ejecutar el script
