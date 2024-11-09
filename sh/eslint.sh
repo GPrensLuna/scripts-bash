@@ -29,352 +29,327 @@ ask_project_type() {
 # ------------------------------------------------------------------------------
 #* 3. Función para generar la configuración de eslint para Next.js
 generate_next_eslint() {
-    echo 'import globals from "globals"
-import tseslint from "typescript-eslint"
-import eslintPluginReact from "eslint-plugin-react"
-import eslintPluginReactHooks from "eslint-plugin-react-hooks"
-import { fixupPluginRules } from "@eslint/compat"
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended"
-import eslintPluginReactCompiler from "eslint-plugin-react-compiler"
-import eslintPluginImport from "eslint-plugin-import"
-import eslintPluginNext from "@next/eslint-plugin-next"
-import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y"
-import vercelStyleGuideTypescript from "@vercel/style-guide/eslint/typescript"
-import vercelStyleGuideReact from "@vercel/style-guide/eslint/rules/react"
-import vercelStyleGuideNext from "@vercel/style-guide/eslint/next"
+    echo 'import globals from 'globals'
+import tseslint from 'typescript-eslint'
+import eslintPluginReact from 'eslint-plugin-react'
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks'
+import { fixupPluginRules } from '@eslint/compat'
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended'
+import eslintPluginReactCompiler from 'eslint-plugin-react-compiler'
+import eslintPluginImport from 'eslint-plugin-import'
+import eslintPluginUnusedImport from 'eslint-plugin-unused-imports'
+import eslintPluginNext from '@next/eslint-plugin-next'
+import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y'
+import vercelStyleGuideTypescript from '@vercel/style-guide/eslint/typescript'
+import vercelStyleGuideReact from '@vercel/style-guide/eslint/rules/react'
+import vercelStyleGuideNext from '@vercel/style-guide/eslint/next'
 
 export default [
-  // Ignores configuration
-  {
-    ignores: [
-      "node_modules",
-      ".next",
-      "out",
-      "coverage",
-      ".idea",
-      "dist",
-      "build",
-      "*.log",
-      "*.tmp",
-      "*.json",
-      "package-lock.json",
-      "yarn.lock",
-      "pnpm-lock.yaml",
-      "tsconfig.json",
-      "tsconfig.build.json",
-      "webpack.config.js",
-      "prettier.config.js",
-      ".env",
-      ".env.local",
-      ".env.*.local",
-      "db.sqlite",
-      "*.sql",
-      "*.db",
-      "*.map",
-      ".vscode",
-      "tests",
-      "test",
-      "__tests__",
-      "docs",
-      "examples",
-      "src/**/*.test.ts",
-      "src/**/*.test.js",
-      "src/**/*.spec.ts",
-      "src/**/*.spec.js",
-      "*.bak",
-      "*.swp",
-      "*.swo"
-    ]
+	// Ignores configuration
+	{
+		ignores: ['node_modules', '.next', 'out', 'coverage', '.idea'],
+	},
+	// General configuration
+	{
+		rules: {
+			'padding-line-between-statements': [
+				'warn',
+				{ blankLine: 'always', prev: '*', next: ['return', 'export'] },
+				{
+					blankLine: 'always',
+					prev: ['const', 'let', 'var'],
+					next: '*',
+				},
+				{
+					blankLine: 'any',
+					prev: ['const', 'let', 'var'],
+					next: ['const', 'let', 'var'],
+				},
+			],
+			'no-console': 'warn',
+			'no-alert': 'warn', // Evita el uso de `alert`, `confirm`, etc.
+			'no-debugger': 'warn', // Evita el uso de `debugger`
+			'no-empty-function': 'warn', // Previene funciones vacías
+			'prefer-const': 'warn', // Asegura el uso de `const` cuando sea posible
+			'consistent-return': 'warn', // Asegura que las funciones tengan un `return` consistente
+			eqeqeq: 'warn', // Asegura el uso de `===` y `!==` en lugar de `==` y `!=`
+		},
+	},
+	// React configuration
+	{
+		plugins: {
+			react: fixupPluginRules(eslintPluginReact),
+			'react-hooks': fixupPluginRules(eslintPluginReactHooks),
+			'react-compiler': fixupPluginRules(eslintPluginReactCompiler),
+			'jsx-a11y': fixupPluginRules(eslintPluginJsxA11y),
+		},
+		languageOptions: {
+			parserOptions: {
+				ecmaFeatures: {
+					jsx: true,
+				},
+			},
+			globals: {
+				...globals.browser,
+				...globals.serviceworker,
+			},
+		},
+		settings: {
+			react: {
+				version: 'detect',
+			},
+		},
+		rules: {
+			...eslintPluginReact.configs.recommended.rules,
+			...eslintPluginJsxA11y.configs.recommended.rules,
+			...eslintPluginReactHooks.configs.recommended.rules,
+			...vercelStyleGuideReact.rules,
+			'react/prop-types': 'off',
+			'react/jsx-uses-react': 'off',
+			'react/react-in-jsx-scope': 'off',
+			'react/self-closing-comp': 'warn',
+			'react/jsx-sort-props': [
+				'warn',
+				{
+					callbacksLast: true,
+					shorthandFirst: true,
+					noSortAlphabetically: false,
+					reservedFirst: true,
+				},
+			],
+			'react/function-component-definition': [
+				'warn',
+				{
+					namedComponents: 'arrow-function',
+					unnamedComponents: 'arrow-function',
+				},
+			],
+			'react-compiler/react-compiler': 'error',
+			'react/jsx-no-leaked-render': 'off',
+			'jsx-a11y/no-static-element-interactions': 'off',
+			'jsx-a11y/click-events-have-key-events': 'off',
+			'jsx-a11y/anchor-is-valid': 'warn', // Asegura que los enlaces sean válidos
+			'jsx-a11y/label-has-associated-control': 'warn', // Asegura que las etiquetas `<label>` tengan controles asociados
+			'jsx-a11y/no-noninteractive-element-interactions': 'warn', // Previene el uso de elementos no interactivos con interacciones
+			'jsx-a11y/no-redundant-roles': 'warn', // Evita roles redundantes en los elementos
+			'jsx-a11y/accessible-emoji': 'warn', // Asegura que los emojis sean accesibles
+			'jsx-a11y/no-static-element-interactions': 'warn', // Evita el uso de elementos estáticos con interacciones
+			'jsx-a11y/click-events-have-key-events': 'warn', // Asegura que los eventos de clic también tengan eventos de teclado
+		},
+	},
+	// TypeScript configuration
+	...[
+		...tseslint.configs.recommended,
+		{
+			rules: {
+				...vercelStyleGuideTypescript.rules,
+				'@typescript-eslint/no-non-null-assertion': 'off', // Evita el uso de `!` en declaraciones de variables
+				'@typescript-eslint/no-shadow': 'off', // Evita el uso de `var` en declaraciones de variables
+				'@typescript-eslint/explicit-function-return-type': 'off', // Evita el uso de `any` en declaraciones de funciones
+				'@typescript-eslint/require-await': 'off', // Evita el uso de promesas sin await en funciones
+				'@typescript-eslint/no-floating-promises': 'off', // Evita el uso de promesas sin await en funciones
+				'@typescript-eslint/no-confusing-void-expression': 'off', // Evita el uso de `void` en declaraciones de variables
+				'@typescript-eslint/explicit-module-boundary-types': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/no-explicit-any': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/no-inferrable-types': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/explicit-function-return-type': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/no-empty-interface': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/ban-ts-comment': 'error', // Evita los comentarios de `@ts-ignore` sin justificación
 
-  },
-  // General configuration
-  {
-    rules: {
-      "padding-line-between-statements": [
-        "warn",
-        { blankLine: "always", prev: "*", next: ["return", "export"] },
-        {
-          blankLine: "always",
-          prev: ["const", "let", "var"],
-          next: "*",
-        },
-        {
-          blankLine: "any",
-          prev: ["const", "let", "var"],
-          next: ["const", "let", "var"],
-        },
-      ],
-      "no-console": "warn",
-      "no-alert": "warn", // Evita el uso de `alert`, `confirm`, etc.
-      "no-debugger": "warn", // Evita el uso de `debugger`
-      "no-unused-vars": "warn", // Asegura que no haya variables sin usar
-      "no-empty-function": "warn", // Previene funciones vacías
-      "prefer-const": "warn", // Asegura el uso de `const` cuando sea posible
-      "consistent-return": "warn", // Asegura que las funciones tengan un `return` consistente
-      eqeqeq: "warn", // Asegura el uso de `===` y `!==` en lugar de `==` y `!=`
-      // "max-lines": ["warn", 200], // Limita la cantidad de líneas en un archivo
-      // "max-params": ["warn", 4], // Limita la cantidad de parámetros de una función
-      // complexity: ["warn", 10], // Limita la complejidad ciclomática
-      //"no-magic-numbers": ["warn", { ignore: [0, 1] }], // Evita números mágicos
-    },
-  },
-  // React configuration
-  {
-    plugins: {
-      react: fixupPluginRules(eslintPluginReact),
-      "react-hooks": fixupPluginRules(eslintPluginReactHooks),
-      "react-compiler": fixupPluginRules(eslintPluginReactCompiler),
-      "jsx-a11y": fixupPluginRules(eslintPluginJsxA11y),
-    },
-    languageOptions: {
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.serviceworker,
-      },
-    },
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
-    rules: {
-      ...eslintPluginReact.configs.recommended.rules,
-      ...eslintPluginJsxA11y.configs.recommended.rules,
-      ...eslintPluginReactHooks.configs.recommended.rules,
-      ...vercelStyleGuideReact.rules,
-      "react/prop-types": "off",
-      "react/jsx-uses-react": "off",
-      "react/react-in-jsx-scope": "off",
-      "react/self-closing-comp": "warn",
-      "react/jsx-sort-props": [
-        "warn",
-        {
-          callbacksLast: true,
-          shorthandFirst: true,
-          noSortAlphabetically: false,
-          reservedFirst: true,
-        },
-      ],
-      "react-compiler/react-compiler": "error",
-      "react/jsx-no-leaked-render": "off",
-      "jsx-a11y/no-static-element-interactions": "off",
-      "jsx-a11y/click-events-have-key-events": "off",
-      "jsx-a11y/anchor-is-valid": "warn", // Asegura que los enlaces sean válidos
-      "jsx-a11y/label-has-associated-control": "warn", // Asegura que las etiquetas `<label>` tengan controles asociados
-      "jsx-a11y/no-noninteractive-element-interactions": "warn", // Previene el uso de elementos no interactivos con interacciones
-      "jsx-a11y/no-redundant-roles": "warn", // Evita roles redundantes en los elementos
-      "jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
-      "jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
-      "jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
-    },
-  },
-  // TypeScript configuration
-  ...[
-    ...tseslint.configs.recommended,
-    {
-      rules: {
-        ...vercelStyleGuideTypescript.rules,
-        "@typescript-eslint/no-non-null-assertion": "off", // Evita el uso de `!` en declaraciones de variables
-        "@typescript-eslint/no-shadow": "off", // Evita el uso de `var` en declaraciones de variables
-        "@typescript-eslint/explicit-function-return-type": "off", // Evita el uso de `any` en declaraciones de funciones
-        "@typescript-eslint/require-await": "off", // Evita el uso de promesas sin await en funciones
-        "@typescript-eslint/no-floating-promises": "off", // Evita el uso de promesas sin await en funciones
-        "@typescript-eslint/no-confusing-void-expression": "off", // Evita el uso de `void` en declaraciones de variables
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            args: "after-used",
-            ignoreRestSiblings: false,
-            argsIgnorePattern: "^_.*?$",
-          },
-        ],
-        "@typescript-eslint/explicit-module-boundary-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/no-explicit-any": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/no-inferrable-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/explicit-function-return-type": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/no-empty-interface": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/ban-ts-comment": "error", // Evita los comentarios de `@ts-ignore` sin justificación
-        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }], // Evita el uso de variables sin usar
-        "@typescript-eslint/consistent-type-definitions": ["error", "interface"], // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/member-ordering": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/no-magic-numbers": ["error", { ignore: [0, 1] }], // Evita números mágicos
-        "@typescript-eslint/no-this-alias": "error", // Evita el uso de `this` en declaraciones de variables
-        "@typescript-eslint/adjacent-overload-signatures": "error", // Evita el uso de `=` en declaraciones de variables
-        "@typescript-eslint/class-literal-property-style": "error",
-        "@typescript-eslint/consistent-generic-constructors": "error",
-        "@typescript-eslint/consistent-indexed-object-style": "error",
-        "@typescript-eslint/consistent-type-assertions": "error",
-        "@typescript-eslint/consistent-type-imports": "error",
-        "@typescript-eslint/explicit-member-accessibility": "error",
-        "@typescript-eslint/method-signature-style": "error",
-        "@typescript-eslint/no-confusing-non-null-assertion": "error",
-        "@typescript-eslint/no-duplicate-enum-values": "error",
-        "@typescript-eslint/no-extra-non-null-assertion": "error",
-        "@typescript-eslint/no-for-in-array": "error",
-        "@typescript-eslint/no-import-type-side-effects": "error",
-        "@typescript-eslint/no-require-imports": "error",
-        "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        "@typescript-eslint/no-non-null-assertion": "error",
-        "@typescript-eslint/unified-signatures": "off",
-      },
-    },
-  ],
-  // Prettier configuration
-  ...[
-    eslintPluginPrettier,
-    {
-      rules: {
-        "prettier/prettier": [
-          "warn",
-          {
-            semi: false,
-            parser: "typescript",
-            tabWidth: 2,
-            proseWrap: "preserve",
-            endOfLine: "lf",
-            printWidth: 100,
-            quoteProps: "as-needed",
-            rangeStart: 0,
-            singleQuote: true,
-            arrowParens: "always",
-            insertPragma: false,
-            trailingComma: "all",
-            requirePragma: false,
-            bracketSpacing: true,
-            jsxSingleQuote: false,
-            bracketSameLine: false,
-            jsxBracketSameLine: false,
-            singleAttributePerLine: false,
-            vueIndentScriptAndStyle: false,
-            htmlWhitespaceSensitivity: "css",
-            embeddedLanguageFormatting: "auto",
-            plugins: ["prettier-plugin-tailwindcss"],
-            overrides: [
-              {
-                files: "*.{ts,tsx}",
-                options: {
-                  parser: "typescript",
-                },
-              },
-              {
-                files: "*.{js,jsx}",
-                options: {
-                  parser: "babel",
-                },
-              },
-              {
-                files: "*.vue",
-                options: {
-                  parser: "vue",
-                },
-              },
-              {
-                files: "*.css",
-                options: {
-                  parser: "css",
-                },
-              },
-              {
-                files: "*.scss",
-                options: {
-                  parser: "scss",
-                },
-              },
-              {
-                files: "*.less",
-                options: {
-                  parser: "less",
-                },
-              },
-              {
-                files: "*.json",
-                options: {
-                  parser: "json",
-                },
-              },
-              {
-                files: "*.md",
-                options: {
-                  parser: "markdown",
-                },
-              },
-              {
-                files: "*.yaml",
-                options: {
-                  parser: "yaml",
-                },
-              },
-            ],
-            importOrder: ["^react", "^next", "<THIRD_PARTY_MODULES>", "^@/(.*)$", "^[./]"],
-            importOrderSeparation: true,
-            importOrderSortSpecifiers: true,
-            importOrderGroupNamespaceSpecifiers: true,
-            importOrderCaseInsensitive: true,
-            xmlWhitespaceSensitivity: "strict",
-            jsonRecursiveSort: true,
-            astroAllowShorthand: false,
-          },
-        ],
-      },
-    },
-  ],
-  // Import configuration
-  {
-    plugins: {
-      import: fixupPluginRules(eslintPluginImport),
-    },
-    rules: {
-      "import/no-default-export": "off", // Evita exportaciones por defecto
-      "import/first": "warn", // Asegura que las importaciones estén al principio del archivo
-      "import/no-duplicates": "warn", // Evita importaciones duplicadas
-
-      "import/order": [
-        "warn",
-        {
-          groups: [
-            "type",
-            "builtin",
-            "object",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
-          pathGroups: [
-            {
-              pattern: "~/**",
-              group: "external",
-              position: "after",
-            },
-          ],
-          "newlines-between": "always", // Determina si se usará una nueva línea entre importaciones
-        },
-      ],
-    },
-  },
-  // Next configuration
-  {
-    plugins: {
-      next: fixupPluginRules(eslintPluginNext),
-    },
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      },
-    },
-    rules: {
-      ...vercelStyleGuideNext.rules,
-      "next/no-img-element": "warn", // Evita el uso de `<img />` sin `next/image`
-    },
-  },
+				'@typescript-eslint/consistent-type-definitions': [
+					'error',
+					'interface',
+				], // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/member-ordering': 'error', // Requerir declaraciones de tipos de retorno en las funciones
+				'@typescript-eslint/no-magic-numbers': ['error', { ignore: [0, 1] }], // Evita números mágicos
+				'@typescript-eslint/no-this-alias': 'error', // Evita el uso de `this` en declaraciones de variables
+				'@typescript-eslint/adjacent-overload-signatures': 'error', // Evita el uso de `=` en declaraciones de variables
+				'@typescript-eslint/class-literal-property-style': 'error',
+				'@typescript-eslint/consistent-generic-constructors': 'error',
+				'@typescript-eslint/consistent-indexed-object-style': 'error',
+				'@typescript-eslint/consistent-type-assertions': 'error',
+				'@typescript-eslint/consistent-type-imports': 'error',
+				'@typescript-eslint/explicit-member-accessibility': 'error',
+				'@typescript-eslint/method-signature-style': 'error',
+				'@typescript-eslint/no-confusing-non-null-assertion': 'error',
+				'@typescript-eslint/no-duplicate-enum-values': 'error',
+				'@typescript-eslint/no-extra-non-null-assertion': 'error',
+				'@typescript-eslint/no-for-in-array': 'error',
+				'@typescript-eslint/no-import-type-side-effects': 'error',
+				'@typescript-eslint/no-require-imports': 'error',
+				'@typescript-eslint/no-unnecessary-type-assertion': 'off',
+				'@typescript-eslint/no-non-null-assertion': 'error',
+				'@typescript-eslint/unified-signatures': 'off',
+			},
+		},
+	],
+	// Prettier configuration
+	...[
+		eslintPluginPrettier,
+		{
+			rules: {
+				'prettier/prettier': [
+					'warn',
+					{
+						semi: false,
+						parser: 'typescript',
+						useTabs: true,
+						tabWidth: 2,
+						proseWrap: 'preserve',
+						endOfLine: 'lf',
+						printWidth: 80,
+						quoteProps: 'as-needed',
+						rangeStart: 0,
+						singleQuote: true,
+						arrowParens: 'always',
+						insertPragma: false,
+						trailingComma: 'all',
+						requirePragma: false,
+						bracketSpacing: true,
+						jsxSingleQuote: false,
+						bracketSameLine: false,
+						jsxBracketSameLine: false,
+						singleAttributePerLine: false,
+						vueIndentScriptAndStyle: false,
+						htmlWhitespaceSensitivity: 'css',
+						embeddedLanguageFormatting: 'auto',
+						plugins: ['prettier-plugin-tailwindcss'],
+						overrides: [
+							{
+								files: '*.{ts,tsx}',
+								options: {
+									parser: 'typescript',
+								},
+							},
+							{
+								files: '*.{js,jsx}',
+								options: {
+									parser: 'babel',
+								},
+							},
+							{
+								files: '*.vue',
+								options: {
+									parser: 'vue',
+								},
+							},
+							{
+								files: '*.css',
+								options: {
+									parser: 'css',
+								},
+							},
+							{
+								files: '*.scss',
+								options: {
+									parser: 'scss',
+								},
+							},
+							{
+								files: '*.less',
+								options: {
+									parser: 'less',
+								},
+							},
+							{
+								files: '*.json',
+								options: {
+									parser: 'json',
+								},
+							},
+							{
+								files: '*.md',
+								options: {
+									parser: 'markdown',
+								},
+							},
+							{
+								files: '*.yaml',
+								options: {
+									parser: 'yaml',
+								},
+							},
+						],
+						importOrder: [
+							'^react',
+							'^next',
+							'<THIRD_PARTY_MODULES>',
+							'^@/(.*)$',
+							'^[./]',
+						],
+						importOrderSeparation: true,
+						importOrderSortSpecifiers: true,
+						importOrderGroupNamespaceSpecifiers: true,
+						importOrderCaseInsensitive: true,
+						xmlWhitespaceSensitivity: 'strict',
+						jsonRecursiveSort: true,
+						astroAllowShorthand: false,
+					},
+				],
+			},
+		},
+	],
+	// Import configuration
+	{
+		plugins: {
+			import: fixupPluginRules(eslintPluginImport),
+		},
+		rules: {
+			'import/no-default-export': 'off', // Evita exportaciones por defecto
+			'import/first': 'warn', // Asegura que las importaciones estén al principio del archivo
+			'import/no-duplicates': 'warn', // Evita importaciones duplicadas
+			'import/order': [
+				'warn',
+				{
+					groups: [
+						'type',
+						'builtin',
+						'object',
+						'external',
+						'internal',
+						'parent',
+						'sibling',
+						'index',
+					],
+					pathGroups: [
+						{
+							pattern: '~/**',
+							group: 'external',
+							position: 'after',
+						},
+					],
+					'newlines-between': 'always', // Determina si se usará una nueva línea entre importaciones
+				},
+			],
+		},
+	},
+	{
+		plugins: {
+			unused: fixupPluginRules(eslintPluginUnusedImport),
+		},
+		rules: {
+			'unused/no-unused-imports': 'warn',
+			'unused/no-unused-vars': 'warn',
+		},
+	},
+	// Next configuration
+	{
+		plugins: {
+			next: fixupPluginRules(eslintPluginNext),
+		},
+		languageOptions: {
+			globals: {
+				...globals.node,
+				...globals.browser,
+			},
+		},
+		rules: {
+			...vercelStyleGuideNext.rules,
+			'next/no-img-element': 'warn', // Evita el uso de `<img />` sin `next/image`
+		},
+	},
 ]
+
 '
 }
 
@@ -388,6 +363,7 @@ import tseslint from "typescript-eslint"
 import globals from "globals"
 import nestjsPlugin from "eslint-plugin-nestjs"
 import eslintPluginImport from "eslint-plugin-import"
+import eslintPluginUnusedImport from 'eslint-plugin-unused-imports'
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended"
 import eslintPluginNode from "eslint-plugin-node"
 import eslintPluginSecurity from "eslint-plugin-security"
@@ -559,6 +535,15 @@ export default [
       "import/first": "warn",
     },
   },
+  {
+		plugins: {
+			unused: fixupPluginRules(eslintPluginUnusedImport),
+		},
+		rules: {
+			'unused/no-unused-imports': 'warn',
+			'unused/no-unused-vars': 'warn',
+		},
+	},
   // NestJS configuration
   {
     plugins: {
@@ -875,9 +860,6 @@ check_gitignore_exists() {
 
 create_gitignore() {
     echo '
-# Next
-.next
-
 # Node.js
 node_modules/
 npm-debug.log
@@ -1058,9 +1040,9 @@ install_required_packages() {
     pnpm)
         echo "Instalando dependencias con pnpm..."
         if [[ "$framework" == "nest" ]]; then
-           pnpm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-prettier eslint-plugin-import eslint-plugin-nestjs eslint-plugin-node eslint-plugin-prettier eslint-plugin-security globals prettier-eslint prettier typescript-eslint typescript husky lint-staged
+           pnpm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-prettier eslint-plugin-import eslint-plugin-nestjs eslint-plugin-node eslint-plugin-prettier eslint-plugin-security globals prettier-eslint prettier typescript-eslint typescript husky lint-staged eslint-plugin-unused-imports
         elif [[ "$framework" == "next" ]]; then
-             pnpm i -D  @eslint/compat @next/eslint-plugin-next babel-plugin-react-compiler eslint eslint-config-next eslint-config-prettier eslint-plugin-import eslint-plugin-jsx  eslint-plugin-prettier eslint-plugin-react-compiler globals prettier prettier-plugin-tailwindcss typescript typescript-eslint @vercel/style-guide husky lint-staged
+             pnpm i -D  @eslint/compat @next/eslint-plugin-next babel-plugin-react-compiler eslint eslint-config-next eslint-config-prettier eslint-plugin-import eslint-plugin-jsx  eslint-plugin-prettier eslint-plugin-react-compiler globals prettier prettier-plugin-tailwindcss typescript typescript-eslint @vercel/style-guide husky lint-staged eslint-plugin-unused-imports
         fi
         ;;
     *)
