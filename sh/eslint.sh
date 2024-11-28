@@ -878,6 +878,8 @@ node_modules/
 npm-debug.log
 package-lock.json
 yarn-error.log
+.next
+pnpm-lock.yaml
 
 # Python
 __pycache__/
