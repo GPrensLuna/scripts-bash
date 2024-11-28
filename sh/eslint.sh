@@ -1108,8 +1108,8 @@ main() {
     echo ".lintstagedrc creado/reemplazado exitosamente."
 
     # Crear el archivo .eslintrc.js o eslint.config.mjs según se desee
-    echo "$eslintrc" > .eslintrc.js  # Asegúrate de que sea .eslintrc.js si ese es tu objetivo
-    echo ".eslintrc.js creado/reemplazado exitosamente."
+    echo "$eslintrc" > eslint.config.mjs  # Asegúrate de que sea .eslintrc.js si ese es tu objetivo
+    echo "eslint.config.mjs creado/reemplazado exitosamente."
 
     # Crear el archivo tsconfig.json
     echo "$tsconfig" > tsconfig.json
