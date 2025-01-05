@@ -7,7 +7,8 @@ dos2unix ~/scripts-bash/sh/eslint.sh
 dos2unix ~/scripts-bash/sh/module.sh
 dos2unix ~/scripts-bash/sh/clean-cache.sh
 
-
+source ~/.bashrc
+source ~/.zshrc
 
 chmod +x ~/scripts/sh/clean-cache.sh
 
