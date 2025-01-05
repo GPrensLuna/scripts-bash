@@ -1,22 +1,12 @@
-chmod +x ~/scripts/sh/eslint.sh
-chmod +x ~/scripts/sh/module.sh
-chmod +x ~/scripts/sh/prettier.sh
-chmod +x ~/scripts/sh/ts.sh
 
-chmod +x ~/scripts/sh/next-eslint.sh
-chmod +x ~/scripts/sh/next-module.sh
-chmod +x ~/scripts/sh/next-prettier.sh
-chmod +x ~/scripts/sh/next-ts.sh
+chmod +x ~/scripts-bash/sh/eslint.sh
+chmod +x ~/scripts-bash/sh/module.sh
+chmod +x ~/scripts-bash/sh/clean-cache.sh
 
-dos2unix ~/scripts/sh/nest-eslint.sh
-dos2unix ~/scripts/sh/nest-module.sh
-dos2unix ~/scripts/sh/nest-prettier.sh
-dos2unix ~/scripts/sh/nest-ts.sh
+dos2unix ~/scripts-bash/sh/eslint.sh
+dos2unix ~/scripts-bash/sh/module.sh
+dos2unix ~/scripts-bash/sh/clean-cache.sh
 
-dos2unix ~/scripts/sh/next-eslint.sh
-dos2unix ~/scripts/sh/next-module.sh
-dos2unix ~/scripts/sh/next-prettier.sh
-dos2unix ~/scripts/sh/next-ts.sh
 
 
 chmod +x ~/scripts/sh/clean-cache.sh
