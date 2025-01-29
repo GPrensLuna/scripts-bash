@@ -30,10 +30,6 @@ ask_project_type() {
 #* 3. Función para generar la configuración de eslint para Next.js
 generate_next_eslint() {
     echo 'import { fixupPluginRules } from "@eslint/compat";
-import eslintPluginNext from "@next/eslint-plugin-next";
-import vercelStyleGuideNext from "@vercel/style-guide/eslint/next";
-import vercelStyleGuideReact from "@vercel/style-guide/eslint/rules/react";
-import vercelStyleGuideTypescript from "@vercel/style-guide/eslint/typescript";
 import eslintPluginImport from "eslint-plugin-import";
 import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
@@ -53,7 +49,6 @@ export default [
       "out",
       "coverage",
       ".idea",
-      "src/auth.ts",
       "src/Modules/App/UI/Components/ui/**.tsx",
       "**/*.test.js", // Ignorar archivos .test.js
       "**/*.test.ts", // Ignorar archivos .test.ts
@@ -120,7 +115,6 @@ export default [
       ...eslintPluginReact.configs.recommended.rules,
       ...eslintPluginJsxA11y.configs.recommended.rules,
       ...eslintPluginReactHooks.configs.recommended.rules,
-      ...vercelStyleGuideReact.rules,
       "react/prop-types": "off",
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
@@ -152,7 +146,6 @@ export default [
       "jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
       "jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
       "jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
-      "react-hooks/exhaustive-deps": "off",
     },
   },
   // TypeScript configuration
@@ -160,7 +153,6 @@ export default [
     ...tseslint.configs.recommended,
     {
       rules: {
-        ...vercelStyleGuideTypescript.rules,
         "@typescript-eslint/no-unused-vars": "warn", // Evita el uso de variables no utilizadas
         "@typescript-eslint/no-non-null-assertion": "off", // Evita el uso de `!` en declaraciones de variables
         "@typescript-eslint/no-shadow": "off", // Evita el uso de `var` en declaraciones de variables
@@ -346,22 +338,6 @@ export default [
     rules: {
       "unused/no-unused-imports": "warn",
       "unused/no-unused-vars": "warn",
-    },
-  },
-  // Next configuration
-  {
-    plugins: {
-      next: fixupPluginRules(eslintPluginNext),
-    },
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      },
-    },
-    rules: {
-      ...vercelStyleGuideNext.rules,
-      "next/no-img-element": "warn", // Evita el uso de `<img />` sin `next/image`
     },
   },
 ];
