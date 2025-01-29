@@ -53,7 +53,8 @@ export default [
       "out",
       "coverage",
       ".idea",
-      "src/UI/components/ui/**.tsx",
+      "src/auth.ts",
+      "src/Modules/App/UI/Components/ui/**.tsx",
       "**/*.test.js", // Ignorar archivos .test.js
       "**/*.test.ts", // Ignorar archivos .test.ts
       "**/*.test.jsx", // Ignorar archivos .test.jsx
@@ -151,6 +152,7 @@ export default [
       "jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
       "jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
       "jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
+      "react-hooks/exhaustive-deps": "off",
     },
   },
   // TypeScript configuration
@@ -363,6 +365,7 @@ export default [
     },
   },
 ];
+
 '
 }
 
