@@ -50,6 +50,9 @@ export default [
       "coverage",
       ".idea",
       "src/Modules/App/UI/Components/ui/**.tsx",
+      "src/components/ui/**.tsx",
+      "src/modules/app/UI/components/ui/**.tsx",
+      "src/modules/app/UI/components/ui/sonner.tsx",
       "**/*.test.js", // Ignorar archivos .test.js
       "**/*.test.ts", // Ignorar archivos .test.ts
       "**/*.test.jsx", // Ignorar archivos .test.jsx
@@ -63,6 +66,7 @@ export default [
   // General configuration
   {
     rules: {
+      "linebreak-style": ["error", "unix"],
       "padding-line-between-statements": [
         "warn",
         { blankLine: "always", prev: "*", next: ["return", "export"] },
@@ -119,6 +123,7 @@ export default [
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react/self-closing-comp": "warn",
+      "react-hooks/exhaustive-deps": "off",
       "react/jsx-sort-props": [
         "warn",
         {
@@ -137,15 +142,13 @@ export default [
       ],
       "react-compiler/react-compiler": "error",
       "react/jsx-no-leaked-render": "off",
-      "jsx-a11y/no-static-element-interactions": "off",
-      "jsx-a11y/click-events-have-key-events": "off",
+      "jsx-a11y/no-static-element-interactions": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
       "jsx-a11y/anchor-is-valid": "warn", // Asegura que los enlaces sean válidos
       "jsx-a11y/label-has-associated-control": "warn", // Asegura que las etiquetas `<label>` tengan controles asociados
       "jsx-a11y/no-noninteractive-element-interactions": "warn", // Previene el uso de elementos no interactivos con interacciones
       "jsx-a11y/no-redundant-roles": "warn", // Evita roles redundantes en los elementos
       "jsx-a11y/accessible-emoji": "warn", // Asegura que los emojis sean accesibles
-      "jsx-a11y/no-static-element-interactions": "warn", // Evita el uso de elementos estáticos con interacciones
-      "jsx-a11y/click-events-have-key-events": "warn", // Asegura que los eventos de clic también tengan eventos de teclado
     },
   },
   // TypeScript configuration
@@ -163,10 +166,8 @@ export default [
         "@typescript-eslint/explicit-module-boundary-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
         "@typescript-eslint/no-explicit-any": "error", // Requerir declaraciones de tipos de retorno en las funciones
         "@typescript-eslint/no-inferrable-types": "error", // Requerir declaraciones de tipos de retorno en las funciones
-        "@typescript-eslint/explicit-function-return-type": "error", // Requerir declaraciones de tipos de retorno en las funciones
         "@typescript-eslint/no-empty-interface": "error", // Requerir declaraciones de tipos de retorno en las funciones
         "@typescript-eslint/ban-ts-comment": "error", // Evita los comentarios de `@ts-ignore` sin justificación
-
         "@typescript-eslint/consistent-type-definitions": ["error", "interface"], // Requerir declaraciones de tipos de retorno en las funciones
         "@typescript-eslint/member-ordering": "error", // Requerir declaraciones de tipos de retorno en las funciones
         // "@typescript-eslint/no-magic-numbers": ["error", { ignore: [0, 1] }], // Evita números mágicos
@@ -186,7 +187,6 @@ export default [
         "@typescript-eslint/no-import-type-side-effects": "error",
         "@typescript-eslint/no-require-imports": "error",
         "@typescript-eslint/no-unnecessary-type-assertion": "off",
-        "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/unified-signatures": "off",
         "@typescript-eslint/no-unused-expressions": "off",
       },
@@ -216,8 +216,7 @@ export default [
             requirePragma: false,
             bracketSpacing: true,
             jsxSingleQuote: false,
-            bracketSameLine: true,
-            jsxBracketSameLine: true,
+            bracketSameLine: false, // Cambiado a false para usar espacios para los corchetes de las funciones
             singleAttributePerLine: false,
             htmlWhitespaceSensitivity: "css",
             embeddedLanguageFormatting: "auto",
@@ -341,6 +340,7 @@ export default [
     },
   },
 ];
+
 
 '
 }
@@ -985,11 +985,14 @@ root = true
 
 [*]
 max_line_length = 90
-# General settings
 indent_size = 2
-indent_style = space       # Usa espacios en lugar de tabuladores
-end_of_line = lf           # Usar LF como final de línea
-charset = utf-8            # Codificación de caracteres
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+bracket_same_line = false
+
 
 '
 }
